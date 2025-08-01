@@ -1,0 +1,65 @@
+{
+  "name": "Next⁸ - Dev Environment (React, Node, Docker)",
+  // Escolha uma imagem base que já tenha Node.js e Git.
+  // Esta é uma imagem oficial do Node.js com Git pré-instalado.
+  // Você pode ajustar a versão do Node.js conforme sua necessidade.
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+
+  // Mapeia portas para que você possa acessar suas aplicações rodando no container.
+  // Ajuste as portas conforme as que suas aplicações React/Node.js usam.
+  "forwardPorts": [3000, 8081, 19000, 19001, 19002], // Exemplo: React dev server, Expo Metro, etc.
+
+  // Instala extensões do VS Code diretamente no ambiente.
+  "extensions": [
+    "dbaeumer.vscode-eslint",          // Para linting com ESLint
+    "esbenp.prettier-vscode",          // Para formatação de código com Prettier
+    "eamodio.git-graph",               // Visualização do Git Graph
+    "github.vscode-pull-request-github", // Para trabalhar com Pull Requests do GitHub
+    "ms-vscode.vscode-typescript-tslint-plugin", // Se usar TypeScript
+    "orta.vscode-jest",                // Para testes com Jest
+    "ms-azuretools.vscode-docker",     // Para trabalhar com Docker
+    "christian-kohler.npm-intellisense", // Autocompletar pacotes npm
+    "dszn.vscode-react-native-snippets", // Snippets para React Native
+    "dszn.vscode-react-native-tools"    // Ferramentas para React Native
+  ],
+
+  // Comandos a serem executados após a criação do container.
+  // Aqui, vamos garantir que o Git esteja configurado e instalar dependências globais se necessário.
+  "postCreateCommand": "git config --global init.defaultBranch main && npm install -g yarn react-native-cli expo-cli && echo 'Ambiente configurado com sucesso!'",
+
+  // Define o usuário que será usado dentro do container.
+  // 'node' é comum para imagens Node.js. Se precisar de privilégios de root para algo específico, pode ajustar.
+  "remoteUser": "node",
+
+  // Habilita o Docker CLI dentro do container.
+  // Isso permite que você rode 'docker build', 'docker run', etc., dentro do seu workspace.
+  // O 'mounts' é crucial para dar acesso ao socket do Docker da VM hospedeira.
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // Configurações adicionais do VS Code para o ambiente.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+        "git.enableSmartCommit": true,
+        "git.autofetch": true,
+        "terminal.integrated.shell.linux": "/bin/bash", // Garante que o bash seja usado no terminal
+        "remote.SSH.enableRemoteCommand": true // Útil para algumas integrações
+      }
+    }
+  },
+
+  // Se você precisar rodar um serviço de Docker dentro do container (Docker-in-Docker),
+  // você pode precisar configurar isso aqui. Para apenas usar o Docker CLI, o 'mounts' acima é suficiente.
+  // Se precisar de Docker-in-Docker, consulte a documentação do envbuilder para mais detalhes.
+  // "features": {
+  //   "ghcr.io/devcontainers/features/docker-in-docker:1": {
+  //     "version": "latest",
+  //     "moby": "true"
+  //   }
+  // }
+}

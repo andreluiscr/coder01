@@ -29,7 +29,7 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+  //"postCreateCommand": "bash .devcontainer/setup.sh",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],

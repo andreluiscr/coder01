@@ -1,5 +1,5 @@
 {
-  "name": "PHP 5.6 + Apache2 + CodeIgniter 3 - Coder Compatible",
+  "name": "PHP 7.1 + Apache2 + CodeIgniter 3 (com mcrypt)",
   "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04",
   "features": {},
   "customizations": {
@@ -9,13 +9,12 @@
         "ms-vscode.vscode-json",
         "bradlc.vscode-tailwindcss",
         "formulahendry.auto-rename-tag",
-        "ms-vscode.live-server",
-        "felixfbecker.php-debug",
+        "xdebug.php-pack",
         "junstyle.php-cs-fixer"
       ],
       "settings": {
-        "php.validate.executablePath": "/usr/bin/php5.6",
-        "php.executablePath": "/usr/bin/php5.6"
+        "php.validate.executablePath": "/usr/bin/php7.1",
+        "php.executablePath": "/usr/bin/php7.1"
       }
     }
   },

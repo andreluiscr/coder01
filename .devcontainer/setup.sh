@@ -49,11 +49,11 @@ sudo update-alternatives --set php /usr/bin/php7.1 || true
 
 echo "⚙️ [5/6] Configurando Apache e Permissões..."
 # Cria o diretório de trabalho, que estava faltando
-sudo mkdir -p /workspace
+sudo mkdir -p /workspaces/www
 
 # O Apache roda como www-data, então damos as permissões ao root no grupo www-data.
-sudo chown -R root:www-data /workspace
-sudo chmod -R 775 /workspace
+sudo chown -R root:www-data /workspaces/www
+sudo chmod -R 775 /workspaces/www
 
 # Configura o Apache para rodar como www-data (padrão e mais estável)
 sudo sed -i 's/export APACHE_RUN_USER=.*/export APACHE_RUN_USER=www-data/' /etc/apache2/envvars
@@ -63,13 +63,13 @@ sudo sed -i 's/export APACHE_RUN_GROUP=.*/export APACHE_RUN_GROUP=www-data/' /et
 sudo a2enmod rewrite
 sudo a2enmod php7.1 || true 
 
-# Configuração do VirtualHost para /workspace
-sudo tee /etc/apache2/sites-available/workspace.conf > /dev/null <<'EOF'
+# Configuração do VirtualHost para /workspaces
+sudo tee /etc/apache2/sites-available/workspaces.conf > /dev/null <<'EOF'
 <VirtualHost *:80>
     ServerName localhost
-    DocumentRoot /workspace
+    DocumentRoot /workspaces/www
 
-    <Directory /workspace>
+    <Directory /workspaces/www>
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
@@ -81,9 +81,9 @@ sudo tee /etc/apache2/sites-available/workspace.conf > /dev/null <<'EOF'
 </VirtualHost>
 EOF
 
-# Desabilitar site default e habilitar workspace
+# Desabilitar site default e habilitar workspaces
 sudo a2dissite 000-default || true
-sudo a2ensite workspace
+sudo a2ensite workspaces
 
 # Configurações PHP ini de desenvolvimento
 sudo mkdir -p /etc/php/7.1/apache2/conf.d
@@ -118,40 +118,6 @@ esac
 EOF
 sudo chmod +x /usr/local/bin/apache-control
 
-# Cria um index.php de teste
-sudo tee /workspace/index.php > /dev/null <<'EOF'
-<?php
-$php_version = phpversion();
-$mcrypt_status = extension_loaded('mcrypt') ? '✅ Habilitado' : '❌ Desabilitado';
-?>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Hello World - PHP 7.1</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; text-align: center; padding-top: 50px; }
-    .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
-    h1 { color: #0056b3; }
-    p { margin: 10px 0; }
-    .info { font-weight: bold; color: #d9534f; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>👋 Hello World!</h1>
-    <p>O ambiente PHP está funcionando corretamente.</p>
-    <p>Versão do PHP: <span class="info"><?php echo $php_version; ?></span></p>
-    <p>Status do mcrypt (Compatibilidade CI3): <span class="info"><?php echo $mcrypt_status; ?></span></p>
-    <p><a href="?info=true" style="color: #007bff; text-decoration: none;">Ver phpinfo()</a></p>
-  </div>
-<?php if (isset($_GET['info']) && $_GET['info'] === 'true') { phpinfo(); } ?>
-</body>
-</html>
-EOF
-sudo chown root:www-data /workspace/index.php
-sudo chmod 664 /workspace/index.php
-
 # Adiciona aliases ao bashrc do root
 sudo tee /root/.bashrc > /dev/null <<'EOF'
 # PHP & Apache aliases
@@ -177,5 +143,5 @@ echo "✅ Apache $(apache2 -v | head -1) está rodando como www-data."
 echo "✅ PHP 7.1 e mcrypt instalados do repositório Ondřej."
 echo "🎉 ================================================="
 echo ""
-echo "📁 Diretório do projeto: /workspace"
+echo "📁 Diretório do projeto: /workspaces"
 echo "🌐 URL de acesso: http://localhost"

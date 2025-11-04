@@ -1,6 +1,6 @@
 {
   "name": "PHP 7.1 + Apache2 + CodeIgniter 3 (com mcrypt)",
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04",
+  "image": "spaulg/php-dev-containers:7.1",
   "features": {},
   "customizations": {
     "vscode": {
